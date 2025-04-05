@@ -84,3 +84,32 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize app
   fetchActivities();
 });
+
+function loadActivities() {
+  fetch('/activities')
+    .then(response => response.json())
+    .then(data => {
+      const activitiesList = document.getElementById('activities-list');
+      activitiesList.innerHTML = ''; // Clear existing content
+
+      Object.keys(data).forEach(activityName => {
+        const activity = data[activityName];
+        const card = document.createElement('div');
+        card.className = 'activity-card';
+
+        card.innerHTML = `
+          <h4>${activityName}</h4>
+          <p>${activity.description}</p>
+          <p><strong>Schedule:</strong> ${activity.schedule}</p>
+          <p><strong>Participants:</strong></p>
+          <ul class="participants-list">
+            ${activity.participants.map(participant => `<li>${participant}</li>`).join('')}
+          </ul>
+        `;
+
+        activitiesList.appendChild(card);
+      });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', loadActivities);
